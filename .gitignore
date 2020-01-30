@@ -1,0 +1,16 @@
+
+.idea/image_segmentation.iml
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml
+region_growing/.idea/inspectionProfiles/profiles_settings.xml
+region_growing/.idea/misc.xml
+region_growing/.idea/modules.xml
+*.iml
+region_growing/.idea/vcs.xml
+region_growing/GraphCut-master/.idea/inspectionProfiles/profiles_settings.xml
+region_growing/GraphCut-master/.idea/misc.xml
+region_growing/GraphCut-master/.idea/modules.xml
+region_growing/GraphCut-master/.idea/vcs.xml
