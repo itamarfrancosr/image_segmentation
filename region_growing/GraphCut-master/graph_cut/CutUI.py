@@ -1,7 +1,8 @@
 
 import cv2
 import numpy as np
-from GraphMaker import GraphMaker
+#from GraphMaker import GraphMaker
+from graph_cut import GraphMaker
 
 
 class CutUI:

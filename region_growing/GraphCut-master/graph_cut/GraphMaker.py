@@ -22,7 +22,7 @@ class GraphMaker:
         self.seed_overlay = None
         self.segment_overlay = None
         self.mask = None
-        self.load_image('resource/default.jpg')
+        self.load_image('E:\\webpage\\image_segmentation\\region_growing\\GraphCut-master\\resource\\avocado3.jpg')
         self.background_seeds = []
         self.foreground_seeds = []
         self.background_average = np.array(3)
@@ -32,6 +32,7 @@ class GraphMaker:
         self.current_overlay = self.seeds
 
     def load_image(self, filename):
+        print("inside load image")
         self.image = cv2.imread(filename)
         self.graph = np.zeros_like(self.image)
         self.seed_overlay = np.zeros_like(self.image)
@@ -39,16 +40,29 @@ class GraphMaker:
         self.mask = None
 
     def add_seed(self, x, y, type):
+        x_thick = 1
+        y_thick = 1
         if self.image is None:
-            print 'Please load an image before adding seeds.'
+            print('Please load an image before adding seeds.')
         if type == self.background:
             if not self.background_seeds.__contains__((x, y)):
+                #list_of_seeds = [] ###
+                #for y_iter in range(-y_thick, y_thick+1): ###
+                #    for x_iter in range(-x_thick, x_thick + 1): ###
+                #        list_of_seeds.append((x+x_iter,y+y_iter)) ###
+                #self.background_seeds.append(list_of_seeds) ###
                 self.background_seeds.append((x, y))
-                cv2.rectangle(self.seed_overlay, (x-1, y-1), (x+1, y+1), (0, 0, 255), -1)
+                cv2.rectangle(self.seed_overlay, (x-x_thick, y-y_thick), (x+x_thick, y+y_thick), (0, 0, 255), -1)
         elif type == self.foreground:
             if not self.foreground_seeds.__contains__((x, y)):
+                #list_of_seeds = []  ###
+                #for y_iter in range(-y_thick, y_thick + 1):  ###
+                #    for x_iter in range(-x_thick, x_thick + 1):  ###
+                #        list_of_seeds.append((x + x_iter, y + y_iter))  ###
+                #self.foreground_seeds.append(list_of_seeds) ###
                 self.foreground_seeds.append((x, y))
-                cv2.rectangle(self.seed_overlay, (x-1, y-1), (x+1, y+1), (0, 255, 0), -1)
+                cv2.rectangle(self.seed_overlay, (x-x_thick, y-y_thick), (x+x_thick, y+y_thick), (0, 255, 0), -1)
+        print(self.background_seeds)
 
     def clear_seeds(self):
         self.background_seeds = []
@@ -63,28 +77,31 @@ class GraphMaker:
 
     def get_image_with_overlay(self, overlayNumber):
         if overlayNumber == self.seeds:
+            print(self.image.shape)
+            print(self.seed_overlay.shape)
             return cv2.addWeighted(self.image, 0.9, self.seed_overlay, 0.4, 0.1)
+            #return cv2.addWeighted(self.image, 0.9, self.image, 0.4, 0.1)
         else:
             return cv2.addWeighted(self.image, 0.9, self.segment_overlay, 0.4, 0.1)
 
     def create_graph(self):
         if len(self.background_seeds) == 0 or len(self.foreground_seeds) == 0:
-            print "Please enter at least one foreground and background seed."
+            print("Please enter at least one foreground and background seed.")
             return
 
-        print "Making graph"
-        print "Finding foreground and background averages"
+        print("Making graph")
+        print("Finding foreground and background averages")
         self.find_averages()
 
-        print "Populating nodes and edges"
+        print("Populating nodes and edges")
         self.populate_graph()
 
-        print "Cutting graph"
+        print("Cutting graph")
         self.cut_graph()
 
     def find_averages(self):
         self.graph = np.zeros((self.image.shape[0], self.image.shape[1]))
-        print self.graph.shape
+        print(self.graph.shape)
         self.graph.fill(self.default)
         self.background_average = np.zeros(3)
         self.foreground_average = np.zeros(3)
@@ -143,9 +160,17 @@ class GraphMaker:
             self.edges.append((my_index, neighbor_index, g))
 
     def cut_graph(self):
+        print('***************************')
+        print(self.segment_overlay.shape)
+        print(self.image.shape)
         self.segment_overlay = np.zeros_like(self.segment_overlay)
         self.mask = np.zeros_like(self.image, dtype=bool)
         g = maxflow.Graph[float](len(self.nodes), len(self.edges))
+        print(self.nodes)
+        print(len(self.nodes))
+        print(self.edges)
+        print(len(self.edges))
+        print(g)
         nodelist = g.add_nodes(len(self.nodes))
 
         for node in self.nodes:
@@ -158,16 +183,20 @@ class GraphMaker:
 
         for index in range(len(self.nodes)):
             if g.get_segment(index) == 1:
+                #print(index)
+                #print(self.image.shape)
                 xy = self.get_xy(index, self.image.shape)
-                self.segment_overlay[xy[1], xy[0]] = (255, 0, 255)
-                self.mask[xy[1], xy[0]] = (True, True, True)
+                #print(int(xy[1]))
+                #print(int(xy[0]))
+                self.segment_overlay[int(xy[1]), int(xy[0])] = (255, 0, 255)
+                self.mask[int(xy[1]), int(xy[0])] = (True, True, True)
 
     def swap_overlay(self, overlay_num):
         self.current_overlay = overlay_num
 
     def save_image(self, filename):
         if self.mask is None:
-            print 'Please segment the image before saving.'
+            print('Please segment the image before saving.')
             return
 
         to_save = np.zeros_like(self.image)

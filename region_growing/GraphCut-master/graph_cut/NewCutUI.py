@@ -5,6 +5,7 @@ from PyQt4.QtCore import pyqtSlot
 from PyQt4.QtGui import *
 from graph_cut import GraphMaker
 
+
 class NewCutUI:
 
     def __init__(self):
@@ -137,13 +138,13 @@ class NewCutUI:
     @pyqtSlot()
     def on_save(self):
         f = QFileDialog.getSaveFileName()
-        print 'Saving'
+        print('Saving')
         if f is not None and f != "":
             self.graph_maker.save_image(f)
 
     @pyqtSlot()
     def on_close(self):
-        print 'Closing'
+        print('Closing')
         self.window.close()
 
     def mouse_down(self, event):
@@ -155,6 +156,7 @@ class NewCutUI:
         self.graph_maker.add_seed(event.x(), event.y(), self.seed_num)
         self.seedLabel.setPixmap(QPixmap.fromImage(
                 self.get_qimage(self.graph_maker.get_image_with_overlay(self.graph_maker.seeds))))
+
 
 if __name__ == "__main__":
     newUI = NewCutUI()
