@@ -22,7 +22,7 @@ class GraphMaker:
         self.seed_overlay = None
         self.segment_overlay = None
         self.mask = None
-        self.load_image('E:\\webpage\\image_segmentation\\region_growing\\GraphCut-master\\resource\\avocado3.jpg')
+        self.load_image('E:\\webpage\\image_segmentation\\region_growing\\GraphCut-master\\resource\\avocado.jpg')
         self.background_seeds = []
         self.foreground_seeds = []
         self.background_average = np.array(3)

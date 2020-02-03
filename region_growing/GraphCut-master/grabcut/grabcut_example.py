@@ -1,24 +1,28 @@
 import numpy as np
 import cv2 as cv
 from matplotlib import pyplot as plt
+
+
 img = cv.imread('E:\\webpage\\image_segmentation\\region_growing\\GraphCut-master\\resource\\avocado3.jpg')
 mask = np.zeros(img.shape[:2], np.uint8)
-plt.imshow(img), plt.colorbar(), plt.show()
+#plt.figure(), plt.imshow(img), plt.colorbar(), plt.show()
+#plt.figure(), plt.imshow(mask), plt.colorbar(), plt.show()
 
 #
 rect = (1, 100, 390, 180)
 color = (255, 0, 0) # Blue color in BGR
 thickness = 2
 img_rect = cv.rectangle(img, rect, color, thickness)
-plt.imshow(img_rect), plt.colorbar(), plt.show()
+plt.figure(), plt.imshow(img_rect), plt.show()
 
 
+mask = np.zeros(img.shape[:2], np.uint8)
 bgdModel = np.zeros((1, 65), np.float64)
 fgdModel = np.zeros((1, 65), np.float64)
-cv.grabCut(img, mask, rect, bgdModel, fgdModel, 5, cv.GC_INIT_WITH_RECT)
+cv.grabCut(img, mask, rect, bgdModel, fgdModel, 10, cv.GC_INIT_WITH_RECT)
 mask2 = np.where((mask == 2) | (mask == 0), 0, 1).astype('uint8')
 img = img*mask2[:, :, np.newaxis]
-plt.imshow(img), plt.colorbar(), plt.show()
+plt.figure(), plt.imshow(img), plt.show()
 
 
 # newmask is the mask image I manually labelled

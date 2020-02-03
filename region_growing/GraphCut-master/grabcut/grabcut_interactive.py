@@ -99,7 +99,7 @@ class App():
         else:
             print("No input image given, so loading default image, lena.jpg \n")
             print("Correct Usage: python grabcut.py <filename> \n")
-            filename = 'E:\\webpage\\image_segmentation\\region_growing\\GraphCut-master\\resource\\IMG_00329.jpg'
+            filename = 'E:\\webpage\\image_segmentation\\region_growing\\GraphCut-master\\resource\\avocado.jpg'
 
         self.img = cv.imread(cv.samples.findFile(filename))
         self.img2 = self.img.copy()                               # a copy of original image
